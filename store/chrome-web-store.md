@@ -17,7 +17,7 @@ Values entered by hand in the Chrome Web Store Developer Dashboard.
 
 ### Description
 
-Same text as `description` in `store/amo-metadata.json`:
+Same text as `description` in `store/firefox-addons-metadata.json`:
 
 ```
 Full page screenshots of web applications, with sidebars, headers and bottom bars kept once and in their place.
