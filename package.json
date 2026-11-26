@@ -1,6 +1,6 @@
 {
   "name": "affresco",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "Full page screenshot browser extension for application layouts",
   "license": "MIT",
