@@ -1,0 +1,212 @@
+<!doctype html>
+<!--
+  Store screenshot (1280x800). The scene is chosen by the URL fragment:
+  #capture, #preview or #compare. Rendered by scripts/store-images.
+  The popup and the preview reuse the stylesheets of the extension, and
+  sample-capture.png is the sample app captured by the real page script.
+-->
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  html, body {
+    width: 1280px;
+    height: 800px;
+    margin: 0;
+    overflow: hidden;
+    background: linear-gradient(165deg, #fbfbfc 0%, #eef1f5 55%, #e3e8ef 100%);
+    font-family: "IBM Plex Sans", sans-serif;
+    color: #15171a;
+  }
+  .brand {
+    position: absolute; top: 34px; left: 64px;
+    display: flex; align-items: center; gap: 10px;
+    font: 600 20px "IBM Plex Mono", monospace;
+  }
+  .brand img { width: 30px; height: 30px; }
+  .keys {
+    position: absolute; top: 34px; right: 64px;
+    display: flex; align-items: center; gap: 6px;
+    font: 500 15px "IBM Plex Mono", monospace;
+  }
+  .keys span { color: #8a929c; }
+  .keys kbd {
+    padding: 4px 9px; background: #ffffff; border: 1px solid #cfd5dd;
+    border-bottom-width: 3px; border-radius: 6px; font: inherit;
+  }
+  h1 {
+    position: absolute; top: 96px; left: 0; right: 0; margin: 0;
+    text-align: center; font-size: 44px; font-weight: 600; letter-spacing: -0.5px;
+  }
+  .subtitle {
+    position: absolute; top: 160px; left: 0; right: 0; margin: 0;
+    text-align: center; font-size: 20px; color: #4d5560;
+  }
+
+  /* Browser window, cut by the bottom edge of the image */
+  .window {
+    position: absolute; top: 232px; left: 90px; width: 1100px; height: 620px;
+    overflow: hidden; background: #ffffff; border: 1px solid #d3d9e1; border-radius: 12px;
+    box-shadow: 0 24px 70px rgba(30, 40, 60, 0.18);
+  }
+  .chrome {
+    display: flex; align-items: center; gap: 16px; height: 46px; padding: 0 16px;
+    background: #eceff3; border-bottom: 1px solid #d9dee5;
+  }
+  .dots { display: flex; gap: 7px; }
+  .dots span { width: 12px; height: 12px; border-radius: 50%; background: #c9ced6; }
+  .address {
+    flex: 1; padding: 6px 14px; background: #ffffff; border-radius: 16px;
+    font-size: 14px; color: #5b636e;
+  }
+  .ext {
+    width: 30px; height: 30px; display: grid; place-items: center; border-radius: 7px;
+  }
+  .ext.active { background: #dde1e7; }
+  .ext img { width: 20px; height: 20px; }
+  .page { position: relative; height: calc(100% - 47px); overflow: hidden; }
+  /* Pages rendered at 1280 px wide, scaled into the 1100 px window */
+  .page > iframe {
+    position: absolute; top: 0; left: 0; border: 0;
+    width: 1280px; height: 800px; transform: scale(0.859375); transform-origin: 0 0;
+  }
+  .popup {
+    position: absolute; top: 4px; right: 10px; width: 266px; height: 194px;
+    border: 1px solid #d3d9e1; border-radius: 10px; overflow: hidden; background: #fff;
+    box-shadow: 0 14px 40px rgba(20, 30, 50, 0.28);
+  }
+  .popup iframe { width: 100%; height: 100%; border: 0; }
+
+  /* Comparison */
+  .compare {
+    position: absolute; top: 222px; left: 0; right: 0;
+    justify-content: center; gap: 72px;
+  }
+  .column { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .label { font: 600 16px "IBM Plex Mono", monospace; }
+  .label.bad { color: #b42318; }
+  .label.good { color: #067647; }
+  .note { font-size: 15px; color: #4d5560; }
+  .sheet {
+    position: relative; overflow: hidden; background: #fff;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1), 0 14px 40px rgba(30, 40, 60, 0.2);
+  }
+  .sheet .slice {
+    position: absolute; left: 0; width: 100%; overflow: hidden;
+    background-image: url(sample-capture.png); background-repeat: no-repeat;
+  }
+  .seam { position: absolute; left: 0; right: 0; height: 0; border-top: 2px dashed rgba(180, 35, 24, 0.7); }
+
+  /* The scene is chosen by data-scene on <body> */
+  .scene { display: none !important; }
+  [data-scene="capture"] .scene.capture,
+  [data-scene="preview"] .scene.preview { display: block !important; }
+  [data-scene="compare"] .scene.compare { display: flex !important; }
+</style>
+</head>
+<body>
+<div class="brand"><img src="../../../.github/logo-light.svg" alt="">affresco</div>
+<div class="keys" id="keys"></div>
+<h1 id="title"></h1>
+<p class="subtitle" id="subtitle"></p>
+
+<div class="window scene capture">
+  <div class="chrome">
+    <div class="dots"><span></span><span></span><span></span></div>
+    <div class="address">app.example.com/billing/settings</div>
+    <div class="ext active"><img src="../../../icons/icon-32.png" alt=""></div>
+  </div>
+  <div class="page">
+    <iframe src="sample-app.html" scrolling="no"></iframe>
+    <div class="popup"><iframe src="popup-scene.html"></iframe></div>
+  </div>
+</div>
+
+<div class="window scene preview">
+  <div class="chrome">
+    <div class="dots"><span></span><span></span><span></span></div>
+    <div class="address">Preview - Billing settings - Acme Console</div>
+    <div class="ext"><img src="../../../icons/icon-32.png" alt=""></div>
+  </div>
+  <div class="page"><iframe src="preview-scene.html"></iframe></div>
+</div>
+
+<div class="compare scene compare">
+  <div class="column">
+    <div class="label bad">Scroll and stitch</div>
+    <div class="sheet" id="stitched"></div>
+    <div class="note">Header, sidebar and bar repeated in every piece</div>
+  </div>
+  <div class="column">
+    <div class="label good">Affresco</div>
+    <div class="sheet" id="affresco"></div>
+    <div class="note">Laid out at full height, captured in one pass</div>
+  </div>
+</div>
+
+<script>
+  const scenes = {
+    capture: {
+      title: 'Full page screenshots of app layouts',
+      subtitle: 'The content scrolling inside the app is captured in full, fixed bars stay in place.',
+      keys: ['Alt', 'Shift', 'S'],
+    },
+    preview: {
+      title: 'Preview, then copy or save',
+      subtitle: 'The whole page in one view: copy to the clipboard or save as PNG.',
+      keys: ['Alt', 'Shift', 'P'],
+    },
+    compare: {
+      title: 'Fixed bars once, in their place',
+      subtitle: 'No repeated headers over the content, no part of the page left out.',
+      keys: [],
+    },
+  };
+  const name = location.hash.slice(1) || 'capture';
+  const scene = scenes[name];
+  document.body.dataset.scene = name;
+  document.getElementById('title').textContent = scene.title;
+  document.getElementById('subtitle').textContent = scene.subtitle;
+  document.getElementById('keys').innerHTML = scene.keys
+    .map((k) => `<kbd>${k}</kbd>`).join('<span>+</span>');
+
+  // Comparison: geometry of the sample app (sample-app.html) and its capture.
+  const W = 1280, H = 1929, VIEW = 713, TOP = 58, BOTTOM = 60, SIDE = 232;
+  const s = 0.212;
+  const piece = (sheet, srcY, h, x, y, w, srcX = 0) => {
+    const d = document.createElement('div');
+    d.className = 'slice';
+    Object.assign(d.style, {
+      left: `${x * s}px`, top: `${y * s}px`, width: `${w * s}px`, height: `${h * s}px`,
+      backgroundSize: `${W * s}px ${H * s}px`,
+      backgroundPosition: `${-srcX * s}px ${-srcY * s}px`,
+    });
+    sheet.append(d);
+  };
+  // What a scroll-and-stitch tool produces: every viewport-sized piece carries
+  // the top bar, the sidebar and the bottom bar again.
+  const stitched = document.getElementById('stitched');
+  const step = VIEW - TOP - BOTTOM;
+  const pieces = 3;
+  stitched.style.width = `${W * s}px`;
+  stitched.style.height = `${pieces * VIEW * s}px`;
+  for (let i = 0; i < pieces; i++) {
+    const y = i * VIEW;
+    piece(stitched, TOP + i * step, VIEW, SIDE, y + TOP, W - SIDE, SIDE);  // content
+    piece(stitched, 0, VIEW, 0, y, SIDE);                                   // sidebar
+    piece(stitched, 0, TOP, SIDE, y, W - SIDE, SIDE);                       // top bar
+    piece(stitched, H - BOTTOM, BOTTOM, SIDE, y + VIEW - BOTTOM, W - SIDE, SIDE); // bottom bar
+    if (i > 0) {
+      const seam = document.createElement('div');
+      seam.className = 'seam';
+      seam.style.top = `${y * s}px`;
+      stitched.append(seam);
+    }
+  }
+  const affresco = document.getElementById('affresco');
+  affresco.style.width = `${W * s}px`;
+  affresco.style.height = `${H * s}px`;
+  piece(affresco, 0, H, 0, 0, W);
+</script>
+</body>
+</html>

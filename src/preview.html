@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>affresco preview</title>
+  <link rel="stylesheet" href="preview.css">
+</head>
+<body>
+  <header>
+    <div class="info">
+      <span id="name" class="name"></span>
+      <span id="meta" class="meta"></span>
+    </div>
+    <span id="status" role="status"></span>
+    <span id="zoomlevel"></span>
+    <button id="zoom" title="Toggle fit to window / actual size (also: click on the image)">Actual size</button>
+    <button id="save" title="Ctrl+S">Save PNG</button>
+    <button id="copy" class="primary" title="Ctrl+C">Copy</button>
+  </header>
+  <main>
+    <img id="shot" class="fit" alt="">
+  </main>
+  <script src="store.js"></script>
+  <script src="preview.js"></script>
+</body>
+</html>

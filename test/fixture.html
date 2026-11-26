@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>affresco fixture</title>
+<style>
+  html, body { margin: 0; height: 100%; overflow: hidden; font: 14px system-ui, sans-serif; }
+  .sidebar { position: fixed; top: 0; left: 0; bottom: 40px; width: 200px; background: #eef; border-right: 2px solid #88c; padding: 12px; box-sizing: border-box; }
+  .shell { height: calc(100vh - 40px); margin-left: 200px; display: flex; flex-direction: column; }
+  .main { flex: 1; overflow-y: auto; }
+  .topbar { position: sticky; top: 0; background: #ffd; border-bottom: 2px solid #cc8; padding: 12px; }
+  section { margin: 16px; padding: 16px; height: 260px; border: 1px solid #ccc; background: linear-gradient(#fff, #f4f4f4); }
+  .devbar { position: fixed; left: 0; right: 0; bottom: 0; height: 40px; background: #222; color: #fff; padding: 10px; box-sizing: border-box; }
+  .toast { position: fixed; right: 16px; top: 16px; width: 120px; padding: 8px; background: #fcc; }
+</style>
+</head>
+<body>
+  <aside class="sidebar">SIDEBAR<br>Home<br>Billing<br>Settings</aside>
+  <div class="shell">
+    <div class="main" id="main">
+      <div class="topbar">TOPBAR (sticky)</div>
+      <script>
+        for (let i = 1; i <= 12; i++) document.write(`<section>Section ${i}</section>`);
+      </script>
+      <section id="lazy">LAZY: waiting</section>
+      <div style="padding:16px">END OF CONTENT</div>
+      <div style="height:600px"></div>
+    </div>
+  </div>
+  <div class="devbar">DEVBAR (fixed bottom)</div>
+  <div class="toast">TOAST (fixed)</div>
+  <script>
+    document.getElementById("main").scrollTop = 900;
+    new IntersectionObserver((entries, obs) => {
+      if (!entries[0].isIntersecting) return;
+      obs.disconnect();
+      setTimeout(() => (document.getElementById("lazy").textContent = "LAZY: loaded"), 400);
+    }).observe(document.getElementById("lazy"));
+  </script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!doctype html>
+<!-- The extension popup, with its own stylesheet, for the store screenshots. -->
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../../../src/popup.css">
+<style>:root { color-scheme: light; } html { overflow: hidden; } body { background: #fff; color: #15171a; }</style>
+</head>
+<body>
+  <fieldset>
+    <legend>Fixed elements</legend>
+    <label><input type="radio" name="mode" value="keep" checked> Keep (sidebar, header, bars)</label>
+    <label><input type="radio" name="mode" value="hide"> Hide</label>
+  </fieldset>
+  <button class="primary wide">Preview</button>
+  <div class="actions">
+    <button>Copy</button>
+    <button>Save PNG</button>
+  </div>
+  <p id="status"></p>
+</body>
+</html>

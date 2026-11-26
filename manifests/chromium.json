@@ -1,0 +1,14 @@
+{
+  "minimum_chrome_version": "116",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "debugger",
+    "clipboardWrite",
+    "downloads",
+    "storage"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  }
+}

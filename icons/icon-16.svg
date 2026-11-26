@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" shape-rendering="crispEdges">
+  <defs>
+    <filter id="glow" filterUnits="userSpaceOnUse" x="0" y="0" width="16" height="16">
+      <feMorphology in="SourceAlpha" operator="dilate" radius="1" result="dilated"/>
+      <feFlood flood-color="#ffffff" flood-opacity="0.35"/>
+      <feComposite in2="dilated" operator="in" result="glow"/>
+      <feMerge>
+        <feMergeNode in="glow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <path filter="url(#glow)" fill="#000000" d="M1 1h4v1h-4Z M1 1h1v4h-1Z M11 1h4v1h-4Z M14 1h1v4h-1Z M1 14h4v1h-4Z M1 11h1v4h-1Z M11 14h4v1h-4Z M14 11h1v4h-1Z M7 3h2v1h-2Z M6 4h4v1h-4Z M5 5h2v1h-2Z M9 5h2v1h-2Z M4 6h2v1h-2Z M10 6h2v1h-2Z M4 7h2v1h-2Z M10 7h2v1h-2Z M4 8h8v1h-8Z M4 9h8v1h-8Z M4 10h2v1h-2Z M10 10h2v1h-2Z M4 11h2v1h-2Z M10 11h2v1h-2Z M4 12h2v1h-2Z M10 12h2v1h-2Z"/>
+</svg>

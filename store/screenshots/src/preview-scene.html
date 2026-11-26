@@ -1,0 +1,41 @@
+<!doctype html>
+<!--
+  The preview tab, with its own stylesheet, showing sample-capture.png (the
+  sample app captured by the real page script), fitted like preview.js does.
+-->
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../../../src/preview.css">
+<style>:root { color-scheme: light; } body { color: #15171a; }</style>
+</head>
+<body>
+  <header>
+    <div class="info">
+      <span class="name">Billing settings - Acme Console</span>
+      <span class="meta">app.example.com · 1280 x 1929 px · 26/11/2026, 10:42:18</span>
+    </div>
+    <span id="status">Copied to clipboard</span>
+    <span id="zoomlevel"></span>
+    <button>Actual size</button>
+    <button>Save PNG</button>
+    <button class="primary">Copy</button>
+  </header>
+  <main>
+    <img id="shot" class="fit" src="sample-capture.png" alt="">
+  </main>
+  <script>
+    const img = document.getElementById('shot');
+    const main = document.querySelector('main');
+    img.addEventListener('load', () => {
+      const s = getComputedStyle(main);
+      const w = main.clientWidth - parseFloat(s.paddingLeft) - parseFloat(s.paddingRight);
+      const h = main.clientHeight - parseFloat(s.paddingTop) - parseFloat(s.paddingBottom);
+      const scale = Math.min(1, w / img.naturalWidth, h / img.naturalHeight);
+      img.style.width = `${Math.round(img.naturalWidth * scale)}px`;
+      img.style.height = `${Math.round(img.naturalHeight * scale)}px`;
+      document.getElementById('zoomlevel').textContent = `${Math.round(scale * 100)}%`;
+    });
+  </script>
+</body>
+</html>

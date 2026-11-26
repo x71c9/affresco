@@ -1,0 +1,20 @@
+{
+  "categories": {
+    "firefox": [
+      "photos-music-videos"
+    ]
+  },
+  "summary": {
+    "en-US": "Full page screenshots of web applications, with fixed sidebars, headers and bars kept once and in place. Preview, copy or save as PNG."
+  },
+  "description": {
+    "en-US": "Full page screenshots of web applications, with sidebars, headers and bottom bars kept once and in their place.\n\nDashboards, admin panels and settings pages rarely scroll as a document: the content scrolls inside the app, surrounded by fixed bars. Scroll-and-stitch tools repeat those bars over the content in every piece, or capture only what is on screen. Affresco lays the page out at its full height first, then captures it in one pass:\n\n- inner scroll areas are expanded to their full content\n- fixed sidebars stretch to the end of the page, headers stay at the top, bottom bars move to the end\n- lazy content (charts, panels, images loaded on scroll) is loaded before the capture\n- the blank space after the content is trimmed\n- the page is restored exactly as it was, scroll position included\n\nAfter the capture, a preview tab shows the whole page in one view; Copy puts the image in the clipboard, Save PNG downloads it. Copy and Save PNG also work directly from the toolbar popup, without preview. Fixed bars can also be left out of the capture (Hide mode).\n\nShortcuts: Alt+Shift+S opens the popup, Alt+Shift+P captures and opens the preview. Both can be changed in the browser settings.\n\nThe capture never leaves the browser unless copied or saved. No data is collected, nothing is sent anywhere.\n\nSource code: https://github.com/x71c9/affresco"
+  },
+  "homepage": {
+    "en-US": "https://github.com/x71c9/affresco"
+  },
+  "version": {
+    "license": "MIT",
+    "approval_notes": "The add-on ships its plain sources: no bundling, no minification, no build step besides copying src/ and writing manifest.json (node build.mjs). The page script (page.js) runs only in the current tab after a click on the toolbar button or a keyboard shortcut; it changes inline styles to lay the page out at full height and reverts them after the capture. No network requests, no remote code."
+  }
+}

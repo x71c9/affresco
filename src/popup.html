@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <fieldset>
+    <legend>Fixed elements</legend>
+    <label><input type="radio" name="mode" value="keep" checked> Keep (sidebar, header, bars)</label>
+    <label><input type="radio" name="mode" value="hide"> Hide</label>
+  </fieldset>
+  <button id="preview" class="primary wide">Preview</button>
+  <div class="actions">
+    <button id="copy">Copy</button>
+    <button id="save">Save PNG</button>
+  </div>
+  <p id="status" role="status"></p>
+  <script src="popup.js"></script>
+</body>
+</html>

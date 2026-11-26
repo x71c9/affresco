@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# Builds the release packages into artifacts/:
+#   affresco-chromium-<version>.zip  Chrome Web Store package
+#   affresco-firefox-<version>.zip   addons.mozilla.org package
+#   affresco-sources-<version>.zip   source code
+set -euo pipefail
+
+cd "$(dirname "$0")/.."
+version="$(node -p 'require("./package.json").version')"
+
+rm -rf artifacts
+mkdir artifacts
+node build.mjs
+for target in chromium firefox; do
+  (cd "dist/$target" && zip -qr "../../artifacts/affresco-$target-$version.zip" .)
+done
+git archive --format zip --output "artifacts/affresco-sources-$version.zip" HEAD
+ls -1 artifacts

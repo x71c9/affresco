@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-4 -4 136 136">
+  <defs>
+    <filter id="glow" filterUnits="userSpaceOnUse" x="-4" y="-4" width="136" height="136">
+      <feMorphology in="SourceAlpha" operator="dilate" radius="1.2" result="dilated"/>
+      <feGaussianBlur in="dilated" stdDeviation="1.6" result="blurred"/>
+      <feFlood flood-color="#ffffff" flood-opacity="0.85"/>
+      <feComposite in2="blurred" operator="in" result="glow"/>
+      <feMerge>
+        <feMergeNode in="glow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <path filter="url(#glow)" fill="#000000" fill-rule="evenodd" d="M6 6 H40 V19 H19 V40 H6 Z M122 6 H88 V19 H109 V40 H122 Z M6 122 H40 V109 H19 V88 H6 Z M122 122 H88 V109 H109 V88 H122 Z M34 106 V66 A42 42 0 0 1 64 25.75 A42 42 0 0 1 94 66 V106 Z M48 106 V66 A28 28 0 0 1 64 40.7 A28 28 0 0 1 80 66 V106 Z M48 72 H80 V84 H48 Z"/>
+</svg>

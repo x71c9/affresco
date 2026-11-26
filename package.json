@@ -1,0 +1,20 @@
+{
+  "name": "affresco",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Full page screenshot browser extension for application layouts",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "test": "node build.mjs && node test/cdp-test.mjs && node test/e2e-preview.mjs",
+    "lint": "web-ext lint --source-dir dist/firefox",
+    "icons": "node scripts/icons.mjs",
+    "start:firefox": "web-ext run --source-dir dist/firefox",
+    "start:chromium": "web-ext run --target chromium --source-dir dist/chromium"
+  },
+  "devDependencies": {
+    "@puppeteer/browsers": "3.3.0",
+    "web-ext": "10.8.0"
+  }
+}

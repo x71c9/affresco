@@ -1,0 +1,219 @@
+<!doctype html>
+<!--
+  Sample application for the store screenshots: an app shell like most
+  dashboards (fixed sidebar and top bar, content in an inner scroll container,
+  fixed bar at the bottom). scripts/store-images captures it with the real
+  page script into sample-capture.png.
+-->
+<html>
+<head>
+<meta charset="utf-8">
+<title>Billing settings - Acme Console</title>
+<style>
+  :root {
+    --line: #e4e7ec;
+    --muted: #667085;
+    --text: #101828;
+    --accent: #4f46e5;
+    --soft: #f5f6fa;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; overflow: hidden; }
+  body { font: 14px/1.45 "IBM Plex Sans", sans-serif; color: var(--text); background: #fff; }
+
+  .sidebar {
+    position: fixed; top: 0; left: 0; bottom: 0; width: 232px;
+    padding: 18px 14px; background: var(--soft); border-right: 1px solid var(--line);
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .org { display: flex; align-items: center; gap: 10px; padding: 4px 8px 18px; font-weight: 600; }
+  .org i { width: 28px; height: 28px; border-radius: 7px; background: linear-gradient(135deg, #6366f1, #a855f7); }
+  .org small { display: block; font-weight: 400; color: var(--muted); font-size: 12px; }
+  .nav { padding: 7px 10px; border-radius: 7px; color: #344054; display: flex; gap: 10px; align-items: center; }
+  .nav b { width: 16px; height: 16px; border-radius: 4px; border: 1.6px solid #98a2b3; }
+  .nav.on { background: #fff; color: var(--accent); font-weight: 600; box-shadow: 0 1px 2px rgb(16 24 40 / 0.06); }
+  .nav.on b { border-color: var(--accent); }
+  .group { margin: 16px 10px 6px; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: #98a2b3; }
+  .user { margin-top: auto; display: flex; gap: 10px; align-items: center; padding: 10px; border-top: 1px solid var(--line); }
+  .user i { width: 30px; height: 30px; border-radius: 50%; background: #fdba74; }
+  .user small { display: block; color: var(--muted); font-size: 12px; }
+
+  .topbar {
+    position: fixed; top: 0; left: 232px; right: 0; height: 58px; z-index: 2;
+    display: flex; align-items: center; gap: 14px; padding: 0 28px;
+    background: rgb(255 255 255 / 0.96); border-bottom: 1px solid var(--line);
+  }
+  .search { flex: 0 0 340px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 8px; color: #98a2b3; }
+  .topbar .spacer { flex: 1; }
+  .pill { padding: 5px 10px; border-radius: 999px; background: #ecfdf3; color: #067647; font-size: 12px; font-weight: 600; }
+  .btn { padding: 7px 14px; border-radius: 8px; border: 1px solid var(--line); background: #fff; font: inherit; font-weight: 500; }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  .main { position: absolute; top: 58px; left: 232px; right: 0; bottom: 60px; overflow-y: auto; }
+  .content { max-width: 1040px; padding: 28px 36px 40px; }
+  .crumbs { color: var(--muted); font-size: 13px; }
+  h1 { margin: 4px 0 4px; font-size: 26px; }
+  .lead { margin: 0 0 24px; color: var(--muted); }
+
+  .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 22px; }
+  .kpi { padding: 16px; border: 1px solid var(--line); border-radius: 12px; }
+  .kpi span { color: var(--muted); font-size: 12px; }
+  .kpi strong { display: block; font-size: 22px; margin: 4px 0; }
+  .kpi em { font-style: normal; font-size: 12px; color: #067647; }
+  .kpi em.down { color: #b42318; }
+
+  .card { border: 1px solid var(--line); border-radius: 12px; margin-bottom: 22px; }
+  .card header { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; border-bottom: 1px solid var(--line); }
+  .card h2 { margin: 0; font-size: 15px; }
+  .card header span { color: var(--muted); font-size: 12px; }
+  .chart { padding: 14px 18px 8px; }
+
+  table { width: 100%; border-collapse: collapse; }
+  th, td { text-align: left; padding: 11px 18px; border-bottom: 1px solid var(--line); }
+  th { font-size: 12px; color: var(--muted); font-weight: 500; background: #fcfcfd; }
+  tr:last-child td { border-bottom: 0; }
+  .st { padding: 2px 8px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+  .paid { background: #ecfdf3; color: #067647; }
+  .open { background: #eff4ff; color: #175cd3; }
+  .late { background: #fef3f2; color: #b42318; }
+  .num { text-align: right; font-variant-numeric: tabular-nums; }
+
+  .setting { display: grid; grid-template-columns: 240px 1fr; gap: 24px; padding: 18px; border-bottom: 1px solid var(--line); }
+  .setting:last-child { border-bottom: 0; }
+  .setting h3 { margin: 0 0 2px; font-size: 14px; }
+  .setting p { margin: 0; color: var(--muted); font-size: 13px; }
+  .toggle { display: flex; gap: 10px; align-items: center; margin: 3px 0 9px; }
+  .toggle i { width: 34px; height: 20px; border-radius: 999px; background: #d0d5dd; position: relative; flex: none; }
+  .toggle i::after { content: ''; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 50%; background: #fff; }
+  .toggle i.on { background: var(--accent); }
+  .toggle i.on::after { left: 16px; }
+  .select { display: inline-block; padding: 6px 30px 6px 10px; border: 1px solid var(--line); border-radius: 8px; }
+
+  .savebar {
+    position: fixed; left: 232px; right: 0; bottom: 0; height: 60px; z-index: 2;
+    display: flex; align-items: center; gap: 10px; padding: 0 28px;
+    background: #101828; color: #fff;
+  }
+  .savebar span { flex: 1; color: #d0d5dd; }
+  .savebar .btn { background: transparent; color: #fff; border-color: #475467; }
+  .savebar .btn.primary { background: #fff; color: #101828; border-color: #fff; }
+</style>
+</head>
+<body>
+<aside class="sidebar">
+  <div class="org"><i></i><div>Acme Inc.<small>Production</small></div></div>
+  <div class="nav"><b></b>Home</div>
+  <div class="nav"><b></b>Payments</div>
+  <div class="nav"><b></b>Customers</div>
+  <div class="nav on"><b></b>Billing</div>
+  <div class="nav"><b></b>Reports</div>
+  <div class="group">Workspace</div>
+  <div class="nav"><b></b>Team</div>
+  <div class="nav"><b></b>Integrations</div>
+  <div class="nav"><b></b>Developers</div>
+  <div class="nav"><b></b>Settings</div>
+  <div class="user"><i></i><div>Dana Moretti<small>Admin</small></div></div>
+</aside>
+
+<div class="topbar">
+  <div class="search">Search customers, invoices, plans...</div>
+  <div class="spacer"></div>
+  <span class="pill">All systems normal</span>
+  <button class="btn">Help</button>
+  <button class="btn primary">New invoice</button>
+</div>
+
+<main class="main">
+  <div class="content">
+    <div class="crumbs">Billing / Settings</div>
+    <h1>Billing settings</h1>
+    <p class="lead">Subscriptions, invoices and customer emails for the Production workspace.</p>
+
+    <div class="kpis">
+      <div class="kpi"><span>Monthly recurring revenue</span><strong>$48,210</strong><em>+6.4% vs last month</em></div>
+      <div class="kpi"><span>Active subscriptions</span><strong>1,284</strong><em>+38 this month</em></div>
+      <div class="kpi"><span>Failed payments</span><strong>17</strong><em class="down">+3 vs last month</em></div>
+      <div class="kpi"><span>Churn rate</span><strong>1.9%</strong><em>-0.3 pts</em></div>
+    </div>
+
+    <section class="card">
+      <header><h2>Revenue, last 12 months</h2><span>Updated 5 minutes ago</span></header>
+      <div class="chart">
+        <svg viewBox="0 0 960 200" width="100%" height="200" role="img" aria-label="Revenue chart">
+          <g stroke="#eef0f3"><line x1="0" y1="40" x2="960" y2="40"/><line x1="0" y1="90" x2="960" y2="90"/><line x1="0" y1="140" x2="960" y2="140"/><line x1="0" y1="190" x2="960" y2="190"/></g>
+          <path d="M0 160 L87 150 L174 152 L261 138 L348 130 L435 134 L522 118 L609 104 L696 108 L783 86 L870 74 L960 60 V190 H0 Z" fill="#eef2ff"/>
+          <path d="M0 160 L87 150 L174 152 L261 138 L348 130 L435 134 L522 118 L609 104 L696 108 L783 86 L870 74 L960 60" fill="none" stroke="#4f46e5" stroke-width="2.5"/>
+          <path d="M0 176 L87 172 L174 170 L261 166 L348 163 L435 160 L522 156 L609 150 L696 148 L783 140 L870 136 L960 130" fill="none" stroke="#a5b4fc" stroke-width="2" stroke-dasharray="5 5"/>
+        </svg>
+      </div>
+    </section>
+
+    <section class="card">
+      <header><h2>Recent invoices</h2><span>12 of 3,410</span></header>
+      <table>
+        <thead><tr><th>Invoice</th><th>Customer</th><th>Plan</th><th>Status</th><th>Date</th><th class="num">Amount</th></tr></thead>
+        <tbody>
+          <tr><td>INV-20418</td><td>Bluefin Logistics</td><td>Business</td><td><span class="st paid">Paid</span></td><td>Nov 25</td><td class="num">$1,240.00</td></tr>
+          <tr><td>INV-20417</td><td>Studio Ortica</td><td>Team</td><td><span class="st paid">Paid</span></td><td>Nov 25</td><td class="num">$320.00</td></tr>
+          <tr><td>INV-20416</td><td>Harbor &amp; Pine</td><td>Business</td><td><span class="st open">Open</span></td><td>Nov 24</td><td class="num">$1,240.00</td></tr>
+          <tr><td>INV-20415</td><td>Quarry Labs</td><td>Enterprise</td><td><span class="st paid">Paid</span></td><td>Nov 24</td><td class="num">$4,800.00</td></tr>
+          <tr><td>INV-20414</td><td>Lanterna Foods</td><td>Team</td><td><span class="st late">Past due</span></td><td>Nov 23</td><td class="num">$320.00</td></tr>
+          <tr><td>INV-20413</td><td>Copperline Media</td><td>Business</td><td><span class="st paid">Paid</span></td><td>Nov 22</td><td class="num">$1,240.00</td></tr>
+          <tr><td>INV-20412</td><td>Northgate Clinics</td><td>Enterprise</td><td><span class="st paid">Paid</span></td><td>Nov 21</td><td class="num">$4,800.00</td></tr>
+          <tr><td>INV-20411</td><td>Verde Mobility</td><td>Team</td><td><span class="st open">Open</span></td><td>Nov 21</td><td class="num">$320.00</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="card">
+      <header><h2>Customer emails</h2><span>Sent from billing@example.com</span></header>
+      <div class="setting">
+        <div><h3>Invoices</h3><p>Emails sent when an invoice is finalized or paid.</p></div>
+        <div>
+          <div class="toggle"><i class="on"></i>Send finalized invoices to customers</div>
+          <div class="toggle"><i class="on"></i>Send receipts for successful payments</div>
+          <div class="toggle"><i></i>Send reminders for invoices past due</div>
+        </div>
+      </div>
+      <div class="setting">
+        <div><h3>Failed payments</h3><p>Retries and notifications when a card is declined.</p></div>
+        <div>
+          <div class="toggle"><i class="on"></i>Notify customers when a payment fails</div>
+          <div class="toggle"><i class="on"></i>Retry failed payments <span class="select">4 times in 2 weeks</span></div>
+          <div class="toggle"><i></i>Pause the subscription after the last retry</div>
+        </div>
+      </div>
+      <div class="setting">
+        <div><h3>Expiring cards</h3><p>Reminders before a saved card expires.</p></div>
+        <div>
+          <div class="toggle"><i class="on"></i>Email customers <span class="select">30 days before</span> the expiry date</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <header><h2>Subscriptions</h2><span>Defaults for new subscriptions</span></header>
+      <div class="setting">
+        <div><h3>Trial period</h3><p>Applied when a plan has no trial of its own.</p></div>
+        <div><span class="select">14 days</span></div>
+      </div>
+      <div class="setting">
+        <div><h3>Proration</h3><p>How plan changes in the middle of a period are billed.</p></div>
+        <div><span class="select">Charge the difference immediately</span></div>
+      </div>
+      <div class="setting">
+        <div><h3>Cancellation</h3><p>When a canceled subscription ends.</p></div>
+        <div><span class="select">At the end of the billing period</span></div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<div class="savebar">
+  <span>You have unsaved changes in Customer emails.</span>
+  <button class="btn">Discard</button>
+  <button class="btn primary">Save changes</button>
+</div>
+<script>document.querySelector('.main').scrollTop = 640;</script>
+</body>
+</html>
