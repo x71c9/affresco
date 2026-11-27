@@ -24,6 +24,8 @@ first, then captures it in one pass.
 Built for Firefox and Chromium-based browsers (Chromium, Chrome, Brave) from a
 single code base, with no dependencies at runtime.
 
+https://github.com/user-attachments/assets/a6bb66c9-60e3-44d6-a4eb-1691b3cc5e20
+
 ## Install
 
 | Browser | Store |
